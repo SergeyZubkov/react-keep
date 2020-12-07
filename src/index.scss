@@ -1,0 +1,34 @@
+.container {
+    width: 100%;
+    padding: 15px;
+    margin: 0 auto;
+
+    @media screen and (min-width: 1200px) {
+        max-width: 1140px;
+    }
+}
+
+
+
+.row {
+    margin-left: -15px;
+    margin-right: -15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.col-2, .col-10 {
+    flex-grow: 1;
+}
+
+.col-2 {
+    flex-grow: 2;
+}
+
+.col-10 {
+    flex-grow: 10;
+}
+
+button {
+    cursor: pointer;
+}

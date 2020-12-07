@@ -1,0 +1,15 @@
+.node-item {
+    width: 200px;
+    border: 1px solid black;
+    border-radius: 2px;
+    padding: 15px;
+    position: relative;
+}
+
+.node-item__btn-delete {
+    border: none;
+    background: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
