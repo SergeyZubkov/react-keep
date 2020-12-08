@@ -4,12 +4,17 @@
     border-radius: 2px;
     padding: 15px;
     position: relative;
+    &__btn-delete {
+        border: none;
+        background: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
 }
 
-.node-item__btn-delete {
-    border: none;
-    background: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-}

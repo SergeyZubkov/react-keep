@@ -1,0 +1,18 @@
+.note-filter {
+    display: flex;
+    justify-content: flex-end;
+    background: rgb(240, 240, 240);
+    padding: 15px;
+    &__inner-container {
+        max-width: 400px;
+        display: flex;
+        align-items: center;
+    }
+    &__select {
+        width: 100%;    
+        margin-right: 10px;
+    }
+    &__btn {
+
+    }
+}
