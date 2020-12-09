@@ -1,7 +1,11 @@
 .app {
+    padding-top: 50px;
     &__note-filter-container {
         margin-bottom: 30px;
         margin-right: -15px;
+    }
+    &__aside {
+        width: 180px;
     }
 }
 

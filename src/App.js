@@ -1,25 +1,27 @@
 import './App.scss';
 import NoteListFiltered from './NoteListFiltered/NoteListFiltered';
 import NoteForm from './NoteForm/NoteForm';
-import NoteList from './NoteList/NoteList';
-import {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {toggleViewMode} from './store/actions';
 
 
 
 function App() {
-  const [isViewMode, setIsViewMode] = useState(true)
+  const isViewMode = useSelector(({isViewMode}) => isViewMode);
+  const dispatch = useDispatch();
 
-  const addTask = () => {
-    setIsViewMode(value => !value)
+  const toggleView = () => {
+    dispatch(toggleViewMode())
   }
+
   return (
     <div className="app">
       <div className='container' > 
         <div className='row'>
-          <aside className='col-2'>
+          <aside className='app__aside col-md-2'>
             <button
               className="create-note-btn"
-              onClick={() => addTask()}
+              onClick={() => toggleView()}
               style={{
                 display: isViewMode ? '' : 'none'
               }}
@@ -28,15 +30,15 @@ function App() {
             </button>
             <button
               className="create-note-btn"
-              onClick={() => addTask()}
+              onClick={() => toggleView()}
               style={{
                 display: isViewMode ? 'none' : ''
               }}
             >
-              Создать
+              Отмена
             </button>
           </aside>  
-          <main className='col-10'>
+          <main className='col-md-10'>
             <NoteListFiltered show={isViewMode}/>
             <NoteForm show={!isViewMode}/>
           </main>
