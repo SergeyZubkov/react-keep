@@ -1,67 +1,78 @@
 import {HighlightWithinTextarea } from "react-highlight-within-textarea";
 import {useSelector, useDispatch} from "react-redux";
 import {
-    updateCreatingNote,
+    updateNoteForm,
     clearNoteForm,
-    createNote,
-    createTag,
+    createOrUpdateNote,
     toggleViewMode
 } from '../store/actions';
 import "./NoteForm.scss"
 
 export default function NoteForm({show}) {
+    const TAG_REGEXP = /#\S+/g
     const dispatch = useDispatch();
 
-    if (!show) {
-        dispatch(clearNoteForm())
-    }
+    let note = useSelector(({noteForm}) => noteForm);
 
-    let note = useSelector(({noteInProgress}) => noteInProgress);
+    // нужны для редактирования 
+    const tagsById = useSelector(({entities: {tags}}) => tags.byId);
+
+    if (!show) {
+        if (note) dispatch(clearNoteForm());
+        return ''
+    }
 
     if (!note) {
         note = {
             text: '',
             tags: []
         }
+    } 
+    // Если мы редактируем Note и массив tags[tagId, ...] не наполнен обектами
+    if (note.tags.every(item => typeof item === 'string')) {
+        
+        note.tags = note.tags.map(id => tagsById[id])
     }
 
-    const startCreateNote = () => {
-        note.tags = note.tags.map(str => {
-            const createdTag =  dispatch(createTag(str)).tag;
-            return createdTag.id
-        })
 
-        dispatch(createNote(note))
-        dispatch(clearNoteForm())
+    const startCreateNote = () => {
+        dispatch(createOrUpdateNote(note))
+        if (note) {
+            dispatch(clearNoteForm())
+        }
         dispatch(toggleViewMode())
+    }
+
+    const prepareTags = (str) => {
+        const tagTextList = (str.match(TAG_REGEXP)||[]).map(t => t.slice(1));
+
+        return tagTextList.map(text => ({text}))
     }
 
     return (
         <div 
             className='note-form'
-            style={{
-                display: show ? '' : 'none'
-            }}
         >
             <HighlightWithinTextarea 
                 className='note-form__input'
                 containerClassName='note-form__input'
                 value={note.text}
-                highlight={/#\S+/g}
-                onChange={e => dispatch(updateCreatingNote({
+                highlight={TAG_REGEXP}
+                onChange={e => dispatch(updateNoteForm({
+                    ...note,
                     text: e.target.value,
-                    tags: (e.target.value.match(/#\S+/g)||[]).map(t => t.slice(1))
+                    tags: prepareTags(e.target.value)
                 }))}
             />
             <div className='note-form__tags'>
-                {note.tags.map(t => <div className='tag'> {t} </div>)}
+                {note.tags.map(t => <div key={t.text} className='tag'> {t.text} </div>)}
             </div>
             <div className='note-form__btns'>
                 <button
                     className='note-form__create-btn'
                     onClick={() => startCreateNote()}
                 >
-                    Создать
+                    {note.id ? "Обновить" : 'Создать'}
                 </button>
             </div>
         </div>

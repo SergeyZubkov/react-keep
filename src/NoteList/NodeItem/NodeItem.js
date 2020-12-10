@@ -1,18 +1,27 @@
 import './NodeItem.scss';
 import {useSelector, useDispatch} from 'react-redux';
 import Tag from '../../Tag/Tag';
-import {removeNote} from '../../store/actions';
+import {removeNote, toggleViewMode, updateNoteForm} from '../../store/actions';
 
 export default function NodeItem({id}) {
-    const note = useSelector(({entities: {notes}}) => notes.byId[id]);
+    const note = useSelector(({entities: {notes} }) => notes.byId[id]);
     const dispatch = useDispatch();
+    console.log(note)
     const {
         text,
         tags
     } = {...note}
 
+    const editNote = () => {
+        dispatch(updateNoteForm(note))
+        dispatch(toggleViewMode())
+    }
+    
     return (
-        <div className='node-item'>
+        <div 
+            className='node-item'
+            onDoubleClick={editNote}
+        >
             <button 
                 className='node-item__btn-delete'
                 onClick={() => dispatch(removeNote(id))}

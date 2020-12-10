@@ -7,22 +7,22 @@ const preloadedState = {
             byId: {
                 '1': {
                     id: "1",
-                    text: "Заметка 1",
+                    text: "Заметка #природа",
                     tags: ["1"]
                 },
                 '2': {
                     id: "2",
-                    text: "Заметка 2",
+                    text: "Заметка #природа #техника",
                     tags: ["1", "4"]
                 },
                 '3': {
                     id: "3",
-                    text: "Заметка 3",
+                    text: "Заметка #природа #животные #техника #психология",
                     tags: ["1","2","3","4"]
                 },
                 '4': {
                     id: "4",
-                    text: "Заметка 4",
+                    text: "Заметка #техника #животные",
                     tags: ["3","2"]
                 }
             },
@@ -50,7 +50,7 @@ const preloadedState = {
             allIds: ['1', '2', '3', '4']
         }
     },
-    noteInProgress: null,
+    noteForm: null,
     noteListFilterByTag: '',
     isViewMode: true
 }

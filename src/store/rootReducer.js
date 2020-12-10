@@ -1,84 +1,101 @@
-export default (state, action) => {
-    switch (action.type) {
-        case 'UPDATE_CREATING_NOTE': 
-            return {
-                ...state,
-                noteInProgress: {...action.note}
-            }
+import { combineReducers } from "redux";
+import notes from "./notesReducer";
+import tags from './tagsReducers';
+import noteForm from './noteFormReducer';
+import noteListFilterByTag from './noteListFilterByTagReducer';
+import isViewMode from './isViewModeReducer';
 
-        case 'CLEAR_NOTE_FORM':
-            return {
-                ...state,
-                noteInProgress: null
-            }
+// export default (state, action) => {
+//     switch (action.type) {
+//         case 'UPDATE_CREATING_NOTE': 
+//             return {
+//                 ...state,
+//                 noteInProgress: {...action.note}
+//             }
 
-        case 'CREATE_NOTE': 
-            const note = action.note;
+//         case 'CLEAR_NOTE_FORM':
+//             return {
+//                 ...state,
+//                 noteInProgress: null
+//             }
 
-            return {
-                ...state,
-               entities: {
-                   ...state.entities,
-                   notes: {
-                        byId: {
-                            ...state.entities.notes.byId,
-                            [note.id]: note
-                        },
-                        allIds: [...state.entities.notes.allIds, note.id]
-                }
-               }
-            }
+//         case 'CREATE_NOTE': 
+//             const note = action.note;
+
+//             return {
+//                 ...state,
+//                entities: {
+//                    ...state.entities,
+//                    notes: {
+//                         byId: {
+//                             ...state.entities.notes.byId,
+//                             [note.id]: note
+//                         },
+//                         allIds: [...state.entities.notes.allIds, note.id]
+//                 }
+//                }
+//             }
         
-        case 'REMOVE_NOTE':
-            const id = action.id;
-            delete state.entities.notes.byId[id]
+//         case 'REMOVE_NOTE':
+//             const id = action.id;
+//             delete state.entities.notes.byId[id]
 
-            return {
-                ...state,
-                entities: {
-                   ...state.entities,
-                   notes: {
-                        byId: {
-                            ...state.entities.notes.byId
-                        },
-                        allIds: state.entities.notes.allIds.filter(nI => nI !== id)
-                    }
-                }
-            }
+//             return {
+//                 ...state,
+//                 entities: {
+//                    ...state.entities,
+//                    notes: {
+//                         byId: {
+//                             ...state.entities.notes.byId
+//                         },
+//                         allIds: state.entities.notes.allIds.filter(nI => nI !== id)
+//                     }
+//                 }
+//             }
 
-        case 'CREATE_TAG':
-            const tag = action.tag;
+//         case 'CREATE_TAG':
+//             const tag = action.tag;
 
-            return {
-                ...state,
-               entities: {
-                   ...state.entities,
-                   tags: {
-                        byId: {
-                            ...state.entities.tags.byId,
-                            [tag.id]: tag
-                        },
-                        allIds: [...state.entities.tags.allIds, tag.id]
-                }
-               }
-            }
+//             return {
+//                 ...state,
+//                entities: {
+//                    ...state.entities,
+//                    tags: {
+//                         byId: {
+//                             ...state.entities.tags.byId,
+//                             [tag.id]: tag
+//                         },
+//                         allIds: [...state.entities.tags.allIds, tag.id]
+//                 }
+//                }
+//             }
 
-        case 'SET_NOTE_LIST_FILTER':
-            const filter = action.filter;
+//         case 'SET_NOTE_LIST_FILTER':
+//             const filter = action.filter;
 
-            return {
-                ...state,
-                noteListFilterByTag: filter
-            }
+//             return {
+//                 ...state,
+//                 noteListFilterByTag: filter
+//             }
 
-        case 'TOGGLE_VIEW_MODE':
-            return {
-                ...state,
-                isViewMode: !state.isViewMode
-            }
+//         case 'TOGGLE_VIEW_MODE':
+//             return {
+//                 ...state,
+//                 isViewMode: !state.isViewMode
+//             }
     
 
-        default: 
-            return state
-    }
-}
+//         default: 
+//             return state
+//     }
+// }
+
+export default combineReducers({
+    entities: combineReducers({
+        notes,
+        tags
+    }),
+    noteForm,
+    noteListFilterByTag,
+    isViewMode
+})

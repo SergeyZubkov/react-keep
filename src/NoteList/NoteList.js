@@ -7,7 +7,7 @@ export default function NoteList() {
     const noteIds = useSelector(({entities: {notes}}) => notes.allIds);
     const notesById = useSelector(({entities: {notes: {byId}}}) => byId)
     const filter = useSelector(({noteListFilterByTag}) => noteListFilterByTag)
-
+        
     return (
         <div className="note-list">
             {
