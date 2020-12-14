@@ -39,8 +39,9 @@ function App() {
             </button>
           </aside>  
           <main className='col-md-10'>
-            <NoteListFiltered show={isViewMode}/>
-            <NoteForm show={!isViewMode}/>
+            {isViewMode 
+            ? <NoteListFiltered />
+            : <NoteForm />}
           </main>
         </div> 
       </div>

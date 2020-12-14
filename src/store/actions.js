@@ -2,9 +2,13 @@ import {nanoid} from 'nanoid';
 import {isEqual, differenceWith} from 'lodash';
 import store from './store';
 
-export const updateNoteForm = note => ({
-    type: "UPDATE_NOTE_FORM",
-    note
+export const setEditedNote = id => ({
+    type: "SET_EDITED_NOTE",
+    id
+})  
+
+export const resetEditedNote = () => ({
+    type: "RESET_EDITED_NOTE"
 })  
 
 const removeUnlinkedTag = (id, parentNote) => {
@@ -16,50 +20,7 @@ const removeUnlinkedTag = (id, parentNote) => {
     : store.dispatch(removeTag(id))
 }
 
-export const createOrUpdateNote = note => {
-    if(note.id) {
-        // создаем копию части стейта, потому что его нельзя мутировать
-        const existedNote = {...store.getState().entities.notes.byId[note.id]};
-        existedNote.tags = existedNote.tags.map(id => store.getState().entities.tags.byId[id]);
-        let action;
-
-        // сравнить пришетший Note с уже имеющимся Note
-        if (isEqual(note, existedNote)) {
-            action = {
-                type: "NOTE_NOT_CHANGED",
-                note
-            }
-        } else {
-            // Определяем нужно ли удалить Tag'и из обновляемой Note
-            
-            // порядок аргументов имеет значение, arr с большей длиной идет первым
-            const removedTagIds = differenceWith(existedNote.tags, note.tags, isEqual).map(t => t.id)
-
-            if (removedTagIds.length) {
-                // Удаляем теги, на которые уже не ссылается ни одна Note
-                removedTagIds.forEach((id) => removeUnlinkedTag(id, note))
-            }
-            // преобразуем список Tag'ов на список их индефикаторов
-            const getId = tag => {
-                if (!tag.id) {
-                    return store.dispatch(createTag(tag)).tag.id
-                }
-                else {
-                    const eT = existedNote.find(eT => eT.id === tag.id);
-                    return isEqual(eT, tag) ? eT.id : store.dispatch(updateTag(tag)).tag.id
-                }
-            }
-            note.tags = note.tags.map(getId)
-
-            action = {
-                type: "EDIT_NOTE",
-                note
-            }
-        }
-
-        return action
-    }
-
+export const createNote = note => {
     note.tags = note.tags.map(tag => {
         const createdTag =  store.dispatch(createTag(tag)).tag;
         return createdTag.id
@@ -73,9 +34,54 @@ export const createOrUpdateNote = note => {
     }
 }
 
-export const clearNoteForm = () => ({
-    type: "CLEAR_NOTE_FORM"
-})
+export const updateNote = note =>  {
+    // создаем копию части стейта, потому что его нельзя мутировать, и 
+    // наполняем массив tags
+    const existedNote = {...store.getState().entities.notes.byId[note.id]};
+    existedNote.tags = existedNote.tags.map(id => store.getState().entities.tags.byId[id]);
+    let action;
+    
+    // сравнить пришедший Note с уже имеющимся Note
+    if (isEqual(note, existedNote)) {
+        action = {
+            type: "NOTE_NOT_CHANGED",
+            note
+        }
+    } else {
+        // преобразуем список Tag'ов на список их индефикаторов
+        const getId = tag => {
+            // создаем новые tag'и
+            if (!tag.id) {
+                return store.dispatch(createTag(tag)).tag.id
+            }
+            // обновляем по надобоности существующие tag'и
+            else {
+                const eT = existedNote.tags.find(eT => eT.id === tag.id);
+                return isEqual(eT, tag) ? eT.id : store.dispatch(updateTag(tag)).tag.id
+            }
+        }
+        note.tags = note.tags.map(getId)
+
+        // Определяем нужно ли удалить Tag'и из обновляемой Note
+
+        // порядок аргументов имеет значение, arr с большей длиной идет первым
+        const removedTagIds = differenceWith(existedNote.tags.map(t => t.id), note.tags, isEqual)
+
+        if (removedTagIds.length) {
+            // Удаляем теги, на которые уже не ссылается ни одна Note
+            removedTagIds.forEach((id) => removeUnlinkedTag(id, note))
+        }
+
+        action = {
+            type: "EDIT_NOTE",
+            note
+        }
+    }
+
+    store.dispatch(resetEditedNote())
+
+    return action
+}
 
 export const createTag = tag => {
     const {

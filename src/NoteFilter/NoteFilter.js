@@ -6,11 +6,6 @@ import {setNoteListFilter} from '../store/actions';
 export default function NoteFilter({data}) {
     const tags = useSelector( ({entities: {tags}}) => tags.allIds.map(id => tags.byId[id]) )
     const currentFilter = useSelector(({noteListFilterByTag}) => noteListFilterByTag)
-    const defaultOption = {
-        id: '',
-        text: 'все'
-    }
-    tags.unshift(defaultOption)
 
     const [selected, setSelected] = useState(currentFilter)
     const dispatch = useDispatch();
@@ -25,6 +20,7 @@ export default function NoteFilter({data}) {
                 onChange={(e) => setSelected(e.target.value)}
                 disabled={!!currentFilter}
                 >
+                    <option key="all" value={''}>все</option>
                     {tags.map(o => (
                         <option key={o.id} value={o.id}>{o.text}</option>
                     ))}

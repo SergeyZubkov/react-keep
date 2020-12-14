@@ -50,7 +50,7 @@ const preloadedState = {
             allIds: ['1', '2', '3', '4']
         }
     },
-    noteForm: null,
+    editedNote: null,
     noteListFilterByTag: '',
     isViewMode: true
 }

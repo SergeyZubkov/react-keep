@@ -14,6 +14,7 @@ export default function NoteList() {
             noteIds
             .filter(id => {
                 const note = notesById[id];
+                console.log(note.tags)
                 return filter ? note.tags.some(tId => tId === filter) : true
             })
             .map(id => <NodeItem key={id} id={id} />)

@@ -1,19 +1,19 @@
 import './NodeItem.scss';
 import {useSelector, useDispatch} from 'react-redux';
 import Tag from '../../Tag/Tag';
-import {removeNote, toggleViewMode, updateNoteForm} from '../../store/actions';
+import {removeNote, toggleViewMode, setEditedNote} from '../../store/actions';
 
 export default function NodeItem({id}) {
     const note = useSelector(({entities: {notes} }) => notes.byId[id]);
     const dispatch = useDispatch();
-    console.log(note)
+    console.log(id)
     const {
         text,
         tags
     } = {...note}
 
     const editNote = () => {
-        dispatch(updateNoteForm(note))
+        dispatch(setEditedNote(id))
         dispatch(toggleViewMode())
     }
     
